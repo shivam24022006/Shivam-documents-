@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shivam Documents</title>
+<style>
+:root{--blue:#1d4ed8;--navy:#102044;--bg:#f4f7fb;--card:#fff;--muted:#64748b}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:#172033}
+header{background:linear-gradient(120deg,#102044,#2563eb);color:white;padding:32px 18px 28px}
+.wrap{max-width:960px;margin:auto}header h1{margin:0;font-size:clamp(26px,5vw,40px)}header p{margin:8px 0 0;color:#dbeafe}
+main{max-width:960px;margin:24px auto;padding:0 16px}
+.search{display:flex;gap:10px;margin:0 0 18px}.search input{flex:1;min-width:0;padding:13px 15px;border:1px solid #d6deea;border-radius:12px;font-size:16px;outline:none}.search input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #dbeafe}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}.filter{border:1px solid #d6deea;background:white;border-radius:999px;padding:8px 13px;cursor:pointer}.filter.active{background:var(--blue);border-color:var(--blue);color:white}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}.doc{background:var(--card);border:1px solid #e2e8f0;border-radius:16px;padding:17px;box-shadow:0 3px 12px #0f172a08}.pdficon{font-size:28px}.doc h3{margin:8px 0 4px;font-size:17px}.doc p{margin:0 0 14px;color:var(--muted);font-size:14px}.actions{display:flex;gap:8px;flex-wrap:wrap}.btn{display:inline-block;text-decoration:none;border-radius:9px;padding:9px 12px;background:var(--blue);color:white;font-size:14px}.btn.secondary{background:#eaf0ff;color:#1d4ed8}
+.empty{padding:25px;text-align:center;color:var(--muted);grid-column:1/-1}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:28px 12px}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>📚 Shivam Documents</h1><p>Find, read and download documents — freely accessible.</p></div></header>
+<main>
+  <div class="search"><input id="search" type="search" placeholder="Search documents, subjects or keywords…"></div>
+  <div class="filters" id="filters"></div>
+  <section class="grid" id="documents"></section>
+</main>
+<footer>Shivam Documents · Public document library</footer>
+<script>
+/* Add your PDFs inside a folder named "pdfs", then edit the list below.
+   Example: file: "pdfs/history-notes.pdf" */
+const docs = [
+  {title:"Add your first PDF here",category:"Other",description:"Replace this sample card with your document's name and details.",file:"#"}
+];
+const categories=["All",...new Set(docs.map(d=>d.category))];
+let chosen="All";
+const filterBox=document.getElementById("filters"),grid=document.getElementById("documents"),search=document.getElementById("search");
+function renderFilters(){filterBox.innerHTML=categories.map(c=>`<button class="filter ${c===chosen?'active':''}" onclick="chosen=${JSON.stringify(c)};renderFilters();renderDocs()">${c}</button>`).join("")}
+function renderDocs(){
+ const q=search.value.trim().toLowerCase();
+ const found=docs.filter(d=>(chosen==="All"||d.category===chosen)&&`${d.title} ${d.category} ${d.description}`.toLowerCase().includes(q));
+ grid.innerHTML=found.length?found.map(d=>`<article class="doc"><div class="pdficon">📄</div><h3>${d.title}</h3><p>${d.category} · ${d.description}</p><div class="actions"><a class="btn" href="${d.file}" target="_blank" rel="noopener">Read PDF</a><a class="btn secondary" href="${d.file}" download>Download</a></div></article>`).join(""):`<div class="empty">No documents found. Try another search.</div>`;
+}
+search.addEventListener("input",renderDocs);renderFilters();renderDocs();
+</script>
+</body>
+</html>
